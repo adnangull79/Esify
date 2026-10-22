@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "326862822971",
+    "project_id": "esify-a3470",
+    "storage_bucket": "esify-a3470.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:326862822971:android:9aef3397e328c811f5461e",
+        "android_client_info": {
+          "package_name": "com.example.esify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXNUg44dE9wUx1HciiRLNUqrLrs55o6rc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
