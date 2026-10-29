@@ -22,7 +22,7 @@ import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Computer
 import androidx.compose.material.icons.filled.Science
 import androidx.compose.material.icons.filled.Spa
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.ripple
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -150,7 +150,7 @@ fun SubjectCard(
     Card(
         modifier = modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
-            indication = rememberRipple(bounded = true),
+            indication = ripple(bounded = true),
             onClick = onClick
         ),
         shape = RoundedCornerShape(14.dp),

@@ -20,7 +20,7 @@ import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Quiz
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.ripple
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -90,7 +90,7 @@ fun QuickResourcesCard(
                         .clip(RoundedCornerShape(8.dp))
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple(bounded = true),
+                            indication = ripple(bounded = true),
                             onClick = resource.onClick
                         )
                         .padding(vertical = 4.dp, horizontal = 2.dp),

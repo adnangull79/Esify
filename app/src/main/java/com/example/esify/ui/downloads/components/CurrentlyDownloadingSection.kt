@@ -19,7 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.ripple
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -82,7 +82,7 @@ fun CurrentlyDownloadingSection(
                 modifier = Modifier
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(bounded = false),
+                        indication = ripple(bounded = false),
                         onClick = onPauseAllClick
                     )
                     .padding(vertical = 4.dp, horizontal = 4.dp)
@@ -158,7 +158,7 @@ fun CurrentlyDownloadingSection(
                             .background(DarkForestGreen, shape = CircleShape)
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
-                                indication = rememberRipple(bounded = false),
+                                indication = ripple(bounded = false),
                                 onClick = { /* Non-functional static preview as required */ }
                             ),
                         contentAlignment = Alignment.Center

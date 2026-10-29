@@ -23,8 +23,8 @@ import androidx.navigation.navArgument
 import com.example.esify.data.preferences.OnboardingPreferences
 import com.example.esify.data.preferences.rememberOnboardingPreferences
 import com.example.esify.ui.auth.AuthChoiceScreen
+import com.example.esify.ui.auth.CreateAccountScreen
 import com.example.esify.ui.auth.placeholder.LoginPlaceholderScreen
-import com.example.esify.ui.auth.placeholder.SignUpPlaceholderScreen
 import com.example.esify.ui.chapterdetails.ChapterDetailsScreen
 import com.example.esify.ui.downloads.DownloadsScreen
 import com.example.esify.ui.home.HomeScreen
@@ -108,13 +108,17 @@ fun AppNavigation(
                 composable(Screen.AuthChoice.route) {
                     AuthChoiceScreen(
                         onLoginClick = {
-                            navController.navigate(Screen.Login.route) {
-                                launchSingleTop = true
+                            if (navController.currentDestination?.route == Screen.AuthChoice.route) {
+                                navController.navigate(Screen.Login.route) {
+                                    launchSingleTop = true
+                                }
                             }
                         },
                         onSignUpClick = {
-                            navController.navigate(Screen.SignUp.route) {
-                                launchSingleTop = true
+                            if (navController.currentDestination?.route == Screen.AuthChoice.route) {
+                                navController.navigate(Screen.SignUp.route) {
+                                    launchSingleTop = true
+                                }
                             }
                         }
                     )
@@ -122,25 +126,40 @@ fun AppNavigation(
                 composable(Screen.Login.route) {
                     LoginPlaceholderScreen(
                         onBackClick = {
-                            navController.popBackStack()
+                            if (navController.currentDestination?.route == Screen.Login.route) {
+                                navController.popBackStack()
+                            }
                         },
                         onContinueToHomeClick = {
-                            navController.navigate(Screen.Home.route) {
-                                popUpTo(Screen.AuthChoice.route) { inclusive = true }
-                                launchSingleTop = true
+                            if (navController.currentDestination?.route == Screen.Login.route) {
+                                navController.navigate(Screen.Home.route) {
+                                    popUpTo(Screen.AuthChoice.route) { inclusive = true }
+                                    launchSingleTop = true
+                                }
                             }
                         }
                     )
                 }
                 composable(Screen.SignUp.route) {
-                    SignUpPlaceholderScreen(
-                        onBackClick = {
-                            navController.popBackStack()
+                    CreateAccountScreen(
+                        onBack = {
+                            if (navController.currentDestination?.route == Screen.SignUp.route) {
+                                navController.popBackStack()
+                            }
                         },
-                        onContinueToHomeClick = {
-                            navController.navigate(Screen.Home.route) {
-                                popUpTo(Screen.AuthChoice.route) { inclusive = true }
-                                launchSingleTop = true
+                        onLoginClick = {
+                            if (navController.currentDestination?.route == Screen.SignUp.route) {
+                                navController.navigate(Screen.Login.route) {
+                                    launchSingleTop = true
+                                }
+                            }
+                        },
+                        onCreateAccount = { _, _, _ ->
+                            if (navController.currentDestination?.route == Screen.SignUp.route) {
+                                navController.navigate(Screen.Home.route) {
+                                    popUpTo(Screen.AuthChoice.route) { inclusive = true }
+                                    launchSingleTop = true
+                                }
                             }
                         }
                     )

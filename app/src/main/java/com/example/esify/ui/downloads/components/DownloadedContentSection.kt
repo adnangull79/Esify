@@ -23,7 +23,7 @@ import androidx.compose.material.icons.filled.Computer
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Science
 import androidx.compose.material.icons.filled.Spa
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.ripple
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -127,7 +127,7 @@ fun DownloadedContentSection(
                 modifier = Modifier
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(bounded = false),
+                        indication = ripple(bounded = false),
                         onClick = onManageClick
                     )
                     .padding(vertical = 4.dp, horizontal = 4.dp)
@@ -161,7 +161,7 @@ fun DownloadedContentCard(
             .fillMaxWidth()
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(bounded = true),
+                indication = ripple(bounded = true),
                 onClick = onClick
             ),
         shape = RoundedCornerShape(14.dp),
