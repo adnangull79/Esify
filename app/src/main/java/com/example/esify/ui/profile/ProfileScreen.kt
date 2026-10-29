@@ -11,7 +11,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.HelpOutline
 import androidx.compose.material.icons.filled.BarChart
-import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.School
@@ -36,13 +35,13 @@ fun ProfileScreen(
     onEditProfileClick: () -> Unit = {},
     onClassAndBoardClick: () -> Unit = {},
     onProgressClick: () -> Unit = {},
-    onBookmarksClick: () -> Unit = {},
+    onQuizHistoryClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
     onHelpClick: () -> Unit = {},
     onAboutClick: () -> Unit = {},
     onLogoutClick: () -> Unit = {}
 ) {
-    val accountMenuItems = remember(onClassAndBoardClick, onProgressClick, onNavigateToDownloads, onBookmarksClick) {
+    val accountMenuItems = remember(onClassAndBoardClick, onProgressClick, onNavigateToDownloads, onQuizHistoryClick) {
         listOf(
             ProfileMenuItem(
                 id = "class_board",
@@ -66,11 +65,11 @@ fun ProfileScreen(
                 onClick = onNavigateToDownloads
             ),
             ProfileMenuItem(
-                id = "bookmarks",
-                title = "My Bookmarks",
-                subtitle = "View your saved topics and questions",
-                icon = Icons.Filled.Bookmark,
-                onClick = onBookmarksClick
+                id = "quiz_history",
+                title = "My Quiz History",
+                subtitle = "View all your completed quizzes",
+                icon = Icons.Filled.BarChart,
+                onClick = onQuizHistoryClick
             )
         )
     }

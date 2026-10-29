@@ -24,13 +24,16 @@ import com.example.esify.data.preferences.OnboardingPreferences
 import com.example.esify.data.preferences.rememberOnboardingPreferences
 import com.example.esify.ui.auth.AuthChoiceScreen
 import com.example.esify.ui.auth.CreateAccountScreen
-import com.example.esify.ui.auth.placeholder.LoginPlaceholderScreen
+import com.example.esify.ui.auth.EmailVerificationScreen
+import com.example.esify.ui.auth.LoginScreen
 import com.example.esify.ui.chapterdetails.ChapterDetailsScreen
+import com.example.esify.ui.customquiz.CreateCustomQuizScreen
 import com.example.esify.ui.downloads.DownloadsScreen
 import com.example.esify.ui.home.HomeScreen
 import com.example.esify.ui.onboarding.OnboardingScreen
 import com.example.esify.ui.onboarding.OnboardingSplashScreen
 import com.example.esify.ui.profile.ProfileScreen
+import com.example.esify.ui.quizhistory.QuizHistoryScreen
 import com.example.esify.ui.subjectdetails.SubjectDetailsScreen
 import com.example.esify.ui.subjects.SubjectsScreen
 import com.example.esify.ui.topicpractice.TopicPracticeScreen
@@ -64,13 +67,15 @@ fun AppNavigation(
             Screen.Onboarding.route,
             Screen.AuthChoice.route,
             Screen.Login.route,
-            Screen.SignUp.route
+            Screen.SignUp.route,
+            Screen.EmailVerification.route,
+            Screen.CreateCustomQuiz.route
         )
 
         val showBottomBar = if (currentRoute == null) {
             isOnboardingCompleted == true && isAuthenticated
         } else {
-            currentRoute !in hideBottomBarRoutes
+            currentRoute !in hideBottomBarRoutes && !currentRoute.startsWith("email_verification")
         }
 
         val startDestinationRoute = when {
@@ -124,10 +129,25 @@ fun AppNavigation(
                     )
                 }
                 composable(Screen.Login.route) {
-                    LoginPlaceholderScreen(
-                        onBackClick = {
+                    LoginScreen(
+                        onBack = {
                             if (navController.currentDestination?.route == Screen.Login.route) {
                                 navController.popBackStack()
+                            }
+                        },
+                        onLogin = { _, _, _ ->
+                            if (navController.currentDestination?.route == Screen.Login.route) {
+                                navController.navigate(Screen.Home.route) {
+                                    popUpTo(Screen.AuthChoice.route) { inclusive = true }
+                                    launchSingleTop = true
+                                }
+                            }
+                        },
+                        onSignUpClick = {
+                            if (navController.currentDestination?.route == Screen.Login.route) {
+                                navController.navigate(Screen.SignUp.route) {
+                                    launchSingleTop = true
+                                }
                             }
                         },
                         onContinueToHomeClick = {
@@ -154,9 +174,40 @@ fun AppNavigation(
                                 }
                             }
                         },
-                        onCreateAccount = { _, _, _ ->
+                        onCreateAccount = { _, email, _ ->
                             if (navController.currentDestination?.route == Screen.SignUp.route) {
-                                navController.navigate(Screen.Home.route) {
+                                navController.navigate(Screen.EmailVerification.createRoute(email)) {
+                                    launchSingleTop = true
+                                }
+                            }
+                        }
+                    )
+                }
+                composable(
+                    route = Screen.EmailVerification.route,
+                    arguments = listOf(
+                        navArgument("email") {
+                            type = NavType.StringType
+                            defaultValue = "student@esify.com"
+                        }
+                    )
+                ) { backStackEntry ->
+                    val emailArg = backStackEntry.arguments?.getString("email") ?: "student@esify.com"
+                    EmailVerificationScreen(
+                        email = emailArg,
+                        onBackClick = {
+                            if (navController.currentDestination?.route?.startsWith("email_verification") == true) {
+                                navController.popBackStack()
+                            }
+                        },
+                        onEditEmailClick = {
+                            if (navController.currentDestination?.route?.startsWith("email_verification") == true) {
+                                navController.popBackStack()
+                            }
+                        },
+                        onBackToLoginClick = {
+                            if (navController.currentDestination?.route?.startsWith("email_verification") == true) {
+                                navController.navigate(Screen.Login.route) {
                                     popUpTo(Screen.AuthChoice.route) { inclusive = true }
                                     launchSingleTop = true
                                 }
@@ -165,30 +216,80 @@ fun AppNavigation(
                     )
                 }
                 composable(Screen.Home.route) {
-                HomeScreen(
-                    onNavigateToSubjects = {
-                        navController.navigate(Screen.Subjects.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                    HomeScreen(
+                        onNavigateToSubjects = {
+                            navController.navigate(Screen.Subjects.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                    onNavigateToDownloads = {
-                        navController.navigate(Screen.Downloads.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                        },
+                        onNavigateToDownloads = {
+                            navController.navigate(Screen.Downloads.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
+                        },
+                        onSubjectClick = { subjectId ->
+                            navController.navigate(Screen.SubjectDetails.createRoute(subjectId))
+                        },
+                        onNavigateToCreateCustomQuiz = {
+                            if (navController.currentDestination?.route == Screen.Home.route) {
+                                navController.navigate(Screen.CreateCustomQuiz.route) {
+                                    launchSingleTop = true
+                                }
+                            }
+                        },
+                        onNavigateToQuizHistory = {
+                            if (navController.currentDestination?.route == Screen.Home.route) {
+                                navController.navigate(Screen.QuizHistory.route) {
+                                    launchSingleTop = true
+                                }
+                            }
                         }
-                    },
-                    onSubjectClick = { subjectId ->
-                        navController.navigate(Screen.SubjectDetails.createRoute(subjectId))
-                    }
-                )
-            }
+                    )
+                }
+                composable(Screen.CreateCustomQuiz.route) {
+                    CreateCustomQuizScreen(
+                        onBackClick = {
+                            if (navController.currentDestination?.route == Screen.CreateCustomQuiz.route) {
+                                navController.popBackStack()
+                            }
+                        },
+                        onCreateQuizClick = { subjectId, chapterId, topicId, _ ->
+                            if (navController.currentDestination?.route == Screen.CreateCustomQuiz.route) {
+                                navController.navigate(
+                                    Screen.TopicPractice.createRoute(subjectId, chapterId, topicId, "quiz")
+                                ) {
+                                    launchSingleTop = true
+                                }
+                            }
+                        }
+                    )
+                }
+                composable(Screen.QuizHistory.route) {
+                    QuizHistoryScreen(
+                        onBackClick = {
+                            if (navController.currentDestination?.route == Screen.QuizHistory.route) {
+                                navController.popBackStack()
+                            }
+                        },
+                        onViewQuizClick = { subjectId, chapterId, topicId ->
+                            if (navController.currentDestination?.route == Screen.QuizHistory.route) {
+                                navController.navigate(
+                                    Screen.TopicPractice.createRoute(subjectId, chapterId, topicId, "quiz")
+                                ) {
+                                    launchSingleTop = true
+                                }
+                            }
+                        }
+                    )
+                }
             composable(Screen.Subjects.route) {
                 SubjectsScreen(
                     onSubjectClick = { subjectId ->
@@ -208,6 +309,13 @@ fun AppNavigation(
                             }
                             launchSingleTop = true
                             restoreState = true
+                        }
+                    },
+                    onQuizHistoryClick = {
+                        if (navController.currentDestination?.route == Screen.Profile.route) {
+                            navController.navigate(Screen.QuizHistory.route) {
+                                launchSingleTop = true
+                            }
                         }
                     }
                 )

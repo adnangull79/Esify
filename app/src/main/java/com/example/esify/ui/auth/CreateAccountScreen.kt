@@ -45,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -293,8 +294,13 @@ private fun SignUpForm(
                 .height(50.dp)
                 .clip(RoundedCornerShape(26.dp))
                 .background(SignUpColors.DarkGreen)
-                .clickable(enabled = formValid) {
-                    onCreateAccount(fullName.trim(), email.trim(), password)
+                .alpha(if (formValid) 1f else 0.85f)
+                .clickable {
+                    onCreateAccount(
+                        if (fullName.isNotBlank()) fullName.trim() else "User",
+                        if (email.isNotBlank()) email.trim() else "student@esify.com",
+                        password
+                    )
                 },
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,

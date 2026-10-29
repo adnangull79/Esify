@@ -5,9 +5,14 @@ sealed class Screen(val route: String) {
     data object AuthChoice : Screen("auth_choice")
     data object Login : Screen("login")
     data object SignUp : Screen("signup")
+    data object EmailVerification : Screen("email_verification/{email}") {
+        fun createRoute(email: String): String = "email_verification/${if (email.isBlank()) "student@esify.com" else email}"
+    }
 
 
     data object Home : Screen("home")
+    data object CreateCustomQuiz : Screen("create_custom_quiz")
+    data object QuizHistory : Screen("quiz_history")
     data object Subjects : Screen("subjects")
     data object Downloads : Screen("downloads")
     data object Profile : Screen("profile")

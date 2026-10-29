@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.esify.ui.home.components.ContinueLearningSection
+import com.example.esify.ui.home.components.CreateCustomQuizCard
 import com.example.esify.ui.home.components.HomeHeader
 import com.example.esify.ui.home.components.OverallProgressCard
 import com.example.esify.ui.home.components.QuickActionsSection
@@ -30,7 +31,9 @@ fun HomeScreen(
     onNavigateToSubjects: () -> Unit = {},
     onNavigateToDownloads: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
-    onSubjectClick: (String) -> Unit = {}
+    onSubjectClick: (String) -> Unit = {},
+    onNavigateToCreateCustomQuiz: () -> Unit = {},
+    onNavigateToQuizHistory: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -56,7 +59,15 @@ fun HomeScreen(
             onSubjectClick = { subject -> onSubjectClick(subject.id) }
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // 3b. Create Custom Quiz Card Button
+        CreateCustomQuizCard(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            onClick = onNavigateToCreateCustomQuiz
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         // 4. Continue Learning Section
         ContinueLearningSection(
@@ -78,7 +89,7 @@ fun HomeScreen(
 
         // 6. Recent Activity Section
         RecentActivitySection(
-            onSeeAllClick = onNavigateToSubjects,
+            onSeeAllClick = onNavigateToQuizHistory,
             onActivityClick = { /* Placeholder action */ }
         )
 
