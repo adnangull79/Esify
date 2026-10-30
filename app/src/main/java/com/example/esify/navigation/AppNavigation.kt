@@ -23,9 +23,9 @@ import androidx.navigation.navArgument
 import com.example.esify.data.preferences.OnboardingPreferences
 import com.example.esify.data.preferences.rememberOnboardingPreferences
 import com.example.esify.ui.auth.AuthChoiceScreen
-import com.example.esify.ui.auth.CreateAccountScreen
 import com.example.esify.ui.auth.EmailVerificationScreen
-import com.example.esify.ui.auth.LoginScreen
+import com.example.esify.ui.auth.login.LoginScreen
+import com.example.esify.ui.auth.signup.CreateAccountScreen
 import com.example.esify.ui.chapterdetails.ChapterDetailsScreen
 import com.example.esify.ui.customquiz.CreateCustomQuizScreen
 import com.example.esify.ui.downloads.DownloadsScreen
@@ -48,6 +48,9 @@ fun AppNavigation(
     isAuthenticated: Boolean = false
 ) {
     val prefs = preferences ?: rememberOnboardingPreferences()
+    val authRepository = remember { com.example.esify.data.auth.AuthRepository() }
+    val userAuthenticated = isAuthenticated || authRepository.isUserLoggedIn
+
     var isOnboardingCompleted by remember { mutableStateOf(initialOnboardingCompleted) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -73,14 +76,14 @@ fun AppNavigation(
         )
 
         val showBottomBar = if (currentRoute == null) {
-            isOnboardingCompleted == true && isAuthenticated
+            isOnboardingCompleted == true && userAuthenticated
         } else {
             currentRoute !in hideBottomBarRoutes && !currentRoute.startsWith("email_verification")
         }
 
         val startDestinationRoute = when {
             isOnboardingCompleted != true -> Screen.Onboarding.route
-            !isAuthenticated -> Screen.AuthChoice.route
+            !userAuthenticated -> Screen.AuthChoice.route
             else -> Screen.Home.route
         }
 
@@ -146,14 +149,6 @@ fun AppNavigation(
                         onSignUpClick = {
                             if (navController.currentDestination?.route == Screen.Login.route) {
                                 navController.navigate(Screen.SignUp.route) {
-                                    launchSingleTop = true
-                                }
-                            }
-                        },
-                        onContinueToHomeClick = {
-                            if (navController.currentDestination?.route == Screen.Login.route) {
-                                navController.navigate(Screen.Home.route) {
-                                    popUpTo(Screen.AuthChoice.route) { inclusive = true }
                                     launchSingleTop = true
                                 }
                             }
@@ -316,6 +311,13 @@ fun AppNavigation(
                             navController.navigate(Screen.QuizHistory.route) {
                                 launchSingleTop = true
                             }
+                        }
+                    },
+                    onLogoutClick = {
+                        authRepository.signOut()
+                        navController.navigate(Screen.AuthChoice.route) {
+                            popUpTo(0) { inclusive = true }
+                            launchSingleTop = true
                         }
                     }
                 )

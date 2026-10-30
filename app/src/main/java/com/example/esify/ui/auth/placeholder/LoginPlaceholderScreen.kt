@@ -2,7 +2,7 @@ package com.example.esify.ui.auth.placeholder
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.esify.ui.auth.LoginScreen
+import com.example.esify.ui.auth.login.LoginScreen
 
 @Composable
 fun LoginPlaceholderScreen(
@@ -15,7 +15,6 @@ fun LoginPlaceholderScreen(
         onBack = onBackClick,
         onLogin = { _, _, _ -> onContinueToHomeClick() },
         onSignUpClick = onSignUpClick,
-        onContinueToHomeClick = onContinueToHomeClick,
         modifier = modifier
     )
 }
